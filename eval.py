@@ -76,4 +76,4 @@ print(n_correct / n)
 data['model_letter'] = model_letter
 data['model_response'] = model_ans
 
-data.to_csv('llama_out.csv', index=False)
+data.to_csv('test.csv', index=False)

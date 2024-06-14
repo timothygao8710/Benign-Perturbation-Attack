@@ -1,2 +1,10 @@
 import ray
 ray.init(ignore_reinit_error=True, num_cpus=4)
+
+conda activate llm
+
+huggingface-cli login
+
+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
+
+git config --global credential.helper store
