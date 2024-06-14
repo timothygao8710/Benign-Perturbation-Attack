@@ -24,11 +24,11 @@ mp = {}
 all_queries = []
 llm_input = []
 
-for i in tqdm(range(n_samples)):
+for iter in tqdm(range(n_samples)):
     i = random.choice(range(len(data)))
     
     if data['answer'][i] != data['model_letter'][i] or i in mp:
-        i -= 1
+        iter -= 1
         continue
 
     mp[i] = {}
