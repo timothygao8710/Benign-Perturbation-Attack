@@ -11,3 +11,5 @@ git config --global credential.helper store
 
 git config --global user.name "Timothy Gao"
 git config --global user.email "timothygao8710@gmail.com"
+
+chmod +x job.sh
