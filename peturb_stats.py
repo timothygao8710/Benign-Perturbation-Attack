@@ -15,7 +15,7 @@ n_samples = 200 # how many samples to test, for each question
 
 res_mp = {}
 
-percentage_bins = [0.75, 1]
+percentage_bins = [0.5]
 
 for percent in percentage_bins:
 
