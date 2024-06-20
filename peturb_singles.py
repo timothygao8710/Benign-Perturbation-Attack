@@ -15,7 +15,7 @@ n_samples = 200 # how many samples to test, for each question
 
 res_mp = {}
 
-singles = [30]
+singles = [23,29]
 
 for S in singles:
 
