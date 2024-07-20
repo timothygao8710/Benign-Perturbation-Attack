@@ -58,3 +58,9 @@ def generate_text(prompts, max_length=100, top_k=4):
 # Usage:
 prompts = ["Question 1: ...", "Question 2: ...", "Question 3: ..."]
 results = generate_text(prompts)
+
+
+### TODO: Finish finding corr bewteen acc and entropy. Sensitivity vs entropy. Ability to be quantized (inference speed, important for medical) vs entropy?
+# In general, analyze relationship between sem entropy and things for medical setting.
+# Then, prefix search (randomly), try to finid at least one that is non-negative accuracy delta
+# Try to do chain of thought for "digging" based on how uncertian the model is
