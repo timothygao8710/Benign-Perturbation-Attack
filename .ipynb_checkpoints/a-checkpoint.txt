@@ -1,0 +1,2 @@
+srun -p jsteinhardt --gres=gpu:A100:1 --pty /bin/zsh
+
