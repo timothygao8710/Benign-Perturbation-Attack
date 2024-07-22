@@ -2,36 +2,48 @@ import pandas as pd
 import ast
 
 FEW_SHOT = """
-
 ######################
 -Examples-
 ######################
-Text:
-The Fed is scheduled to meet on Tuesday and Wednesday, with the central bank planning to release its latest policy decision on Wednesday at 2:00 p.m. ET, followed by a press conference where Fed Chair Jerome Powell will take questions. Investors expect the Federal Open Market Committee to hold its benchmark interest rate steady in a range of 5.25%-5.5%.
-######################
-Output:
-("entity"{{tuple_delimiter}}FED{{tuple_delimiter}}ORGANIZATION{{tuple_delimiter}}The Fed is the Federal Reserve, which is setting interest rates on Tuesday and Wednesday)
-{{record_delimiter}}
-("entity"{{tuple_delimiter}}JEROME POWELL{{tuple_delimiter}}PERSON{{tuple_delimiter}}Jerome Powell is the chair of the Federal Reserve)
-{{record_delimiter}}
-("entity"{{tuple_delimiter}}FEDERAL OPEN MARKET COMMITTEE{{tuple_delimiter}}ORGANIZATION{{tuple_delimiter}}The Federal Reserve committee makes key decisions about interest rates and the growth of the United States money supply)
-{{record_delimiter}}
-("relationship"{{tuple_delimiter}}JEROME POWELL{{tuple_delimiter}}FED{{tuple_delimiter}}Jerome Powell is the Chair of the Federal Reserve and will answer questions at a press conference{{tuple_delimiter}}9)
-{{completion_delimiter}}
-######################
-Text:
-Arm's (ARM) stock skyrocketed in its opening day on the Nasdaq Thursday. But IPO experts warn that the British chipmaker's debut on the public markets isn't indicative of how other newly listed companies may perform.
+Question -
 
-Arm, a formerly public company, was taken private by SoftBank in 2016. The well-established chip designer says it powers 99% of premium smartphones.
-######################
-Output:
+A 50-year-old man comes to the physician because of a 6-month history of difficulties having sexual intercourse due to erectile dysfunction. He has type 2 diabetes mellitus that is well controlled with metformin. He does not smoke. He drinks 5–6 beers daily. His vital signs are within normal limits. Physical examination shows bilateral pedal edema, decreased testicular volume, and increased breast tissue. The spleen is palpable 2 cm below the left costal margin. Abdominal ultrasound shows an atrophic, hyperechoic, nodular liver. An upper endoscopy is performed and shows dilated submucosal veins 2 mm in diameter with red spots on their surface in the distal esophagus. Therapy with a sildenafil is initiated for his erectile dysfunction. Which of the following is the most appropriate next step in management of this patient's esophageal findings?
 
+Choices -
+A Injection sclerotherapy
+B Nadolol therapy
+C Losaratan therapy
+D Octreotide therapy
+E Isosorbide mononitrate therapy
+F Endoscopic band ligation
+G Transjugular intrahepatic portosystemic shunt
+H Metoprolol therapy
+
+As an extremely experienced and knowledgeable medical professional answering this question accurately, the letter of the correct answer is
+######################
+B
+######################
+Question -
+
+A 7-year-old boy is brought to the physician by his mother because his teachers have noticed him staring blankly on multiple occasions over the past month. These episodes last for several seconds and occasionally his eyelids flutter. He was born at term and has no history of serious illness. He has met all his developmental milestones. He appears healthy. Neurologic examination shows no focal findings. Hyperventilation for 30 seconds precipitates an episode of unresponsiveness and eyelid fluttering that lasts for 7 seconds. He regains consciousness immediately afterward. An electroencephalogram shows 3-Hz spikes and waves. Which of the following is the most appropriate pharmacotherapy for this patient?
+
+Choices -
+
+A Vigabatrin
+B Lamotrigine
+C Pregabalin
+D Clonazepam
+E Carbamazepine
+F Ethosuximide
+G Phenytoin
+H Levetiracetam
+
+As an extremely experienced and knowledgeable medical professional answering this question accurately, the letter of the correct answer is
+######################
+F
 ######################
 -Real Data-
 ######################
-Text: {input_text}
-######################
-
 """
 
 # Load the data
@@ -42,9 +54,25 @@ print(data.head())
 def get_data_len():
     return len(data)
 
+def get_is_correct_query(i):
+    num_options = len(get_row_options(i))
+
+    all_queries = []
+    for _ in range(num_options):
+        query = ''
+        query += 'Question -\n\n' + get_row_question(i) + '\n\n'
+        query += 'As an extremely experienced and knowledgeable medical professional answering this question accurately, is the correct answer ' + get_ith_option(i, _)  + '?'
+
+        query += "Please answer with Yes or No."
+        all_queries.append(query)
+
+    return all_queries
+
 # Function to get the query of a specific row
 def get_row_query(i):
-    query = 'Question -\n\n' + get_row_question(i) + '\nChoices -\n' + getOptionsString(get_row_options(i))
+    query = ''
+    # query += FEW_SHOT
+    query += 'Question -\n\n' + get_row_question(i) + '\n\nChoices -\n\n' + getOptionsString(get_row_options(i))
     query += '\nAs an extremely experienced and knowledgeable medical professional answering this question accurately, the letter of the correct answer is '
     return query
 
@@ -66,10 +94,19 @@ def getOptionsString(options):
         options = strToDict(options)
         
     res = ''
-    for i in options:
-        res += i + ' ' + options[i]
+    for i in options:  
+        res += i + ' ' + options[i].split('\n')[0]
         res += '\n'
+
     return res
+
+def get_ith_option(row, i):
+    options = get_row_options(row)
+    if isinstance(options, str):
+        options = strToDict(options)
+        
+    return options[i].split('\n')[0]
+
 
 # Function to convert a string to a dictionary
 def strToDict(Str):
@@ -80,4 +117,5 @@ def strToDict(Str):
         return {}
 
 if __name__ == '__main__':
-    print(get_row_query(9))
+    print(get_row_query(97))
+    print(get_correct_answer(97))

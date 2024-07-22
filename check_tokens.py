@@ -6,7 +6,7 @@ import torch.nn.functional as F
 model_name = "meta-llama/Meta-Llama-3-8B-Instruct"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-toks = ["A", "B", "C", "D", "E", "F", "G"]
+toks = ["A", "B", "C", "D", "E", "F", "G", "Yes", "No"]
 oks = [False for _ in range(len(toks))]
 
 # Function to print all tokens and their characters

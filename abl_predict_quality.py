@@ -13,25 +13,27 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
 from xgboost import XGBClassifier
 from lightgbm import LGBMClassifier
+from utils import *
 
-# Load data function (as provided)
-def load_data(file_path):
-    with open(file_path, 'r') as file:
-        data_str = json.load(file)
-        data = ast.literal_eval(data_str)
-        features, output = [], []
-        for row in data:
-            output.append(row["is_correct"])
-            cur_features = [row["entropy"]]
-            cur_features.extend(row["model_prob"])
-            diffs = [row["model_prob"][i-1] - row["model_prob"][i] for i in range(1, len(row["model_prob"]))]
-            cur_features.extend(diffs)
-            features.append(cur_features)
+def load(file_path):
+    data = load_data(file_path)
+
+    features, output = [], []
+    for row in data:
+        output.append(row["is_correct"])
+        cur_features = []
+        cur_features.append(row["model_prob"][0])
+        # cur_features.append(row["entropy"])
+        # cur_features.extend(row["model_prob"])
+        # diffs = [row["model_prob"][i-1] - row["model_prob"][i] for i in range(1, len(row["model_prob"]))]
+        # cur_features.extend(diffs)
+        features.append(cur_features)
+
+        print(row)
     return features, output
 
-# Load the data
-file_path = 'acc_v_entropy.json'
-features, output = load_data(file_path)
+file_path = './data/medqa_llama'
+features, output = load(file_path)
 
 # Convert to numpy arrays
 X = np.array(features)
@@ -66,12 +68,12 @@ classifiers = {
 # Define feature sets for ablation study
 feature_sets = {
     'All Features': slice(None),
-    'Entropy Only': slice(0, 1),
-    'Model Probabilities Only': slice(1, -len(diffs)),
-    'Probability Differences Only': slice(-len(diffs), None),
-    'Entropy + Model Probabilities': slice(0, -len(diffs)),
-    'Entropy + Probability Differences': np.r_[0, -len(diffs):],
-    'Model Probabilities + Probability Differences': slice(1, None)
+    # 'Entropy Only': slice(0, 1),
+    # 'Model Probabilities Only': slice(1, -len(diffs)),
+    # 'Probability Differences Only': slice(-len(diffs), None),
+    # 'Entropy + Model Probabilities': slice(0, -len(diffs)),
+    # 'Entropy + Probability Differences': np.r_[0, -len(diffs):],
+    # 'Model Probabilities + Probability Differences': slice(1, None)
 }
 
 # Function to evaluate a classifier
