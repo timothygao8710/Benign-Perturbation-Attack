@@ -8,16 +8,6 @@ def query_llm(llm, prompts, verbose=False):
     
     return [output.outputs[0].text for output in outputs]
 
-def getOptionsString(options):
-    if type(options) != map:
-        options = strToDict(options)
-        
-    res = ''
-    for i in options:
-        res += i + ' ' + options[i]
-        res += '\n'
-    return res
-
 def getLetter(llm_response):
     # for i in llm_response.split('\n'):
     #     if(len(i) > 1 and i[0] != '#'):

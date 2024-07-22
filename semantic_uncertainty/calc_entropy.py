@@ -1,9 +1,13 @@
-from entailment import get_semantic_ids, EntailmentDeberta
 import numpy as np
 
 # @ToDO: experiement with different formulas - regular entropy?
 def predictive_entropy_rao(log_probs):
     entropy = -np.sum(np.exp(log_probs) * log_probs)
+    return entropy
+
+def get_entropy_from_probabilities(probabilities):
+    assert np.isclose(probabilities.sum(), 1)
+    entropy = - (probabilities * np.log(probabilities)).sum()
     return entropy
 
 def cluster_assignment_entropy(semantic_ids):
@@ -25,15 +29,15 @@ def cluster_assignment_entropy(semantic_ids):
     n_generations = len(semantic_ids)
     counts = np.bincount(semantic_ids)
     probabilities = counts/n_generations
-    assert np.isclose(probabilities.sum(), 1)
-    entropy = - (probabilities * np.log(probabilities)).sum()
-    return entropy
+    print(probabilities)
+    return get_entropy_from_probabilities(probabilities)
 
 # Given a list of string, compute the discrete semantic uncertainty. or cluster semantic uncertainty (see notebook)
 def get_semantic_uncertainty(strings):
+    from entailment import get_semantic_ids, EntailmentDeberta
+
     n = len(strings)
-    strings = ["Paris is the capital of France", "France's capital is Paris", "When someone visits France, they go to Paris", "China's capital is Beijing", "Beijing is China's capital", "Random"]
-    # Output: [0, 0, 1, 2, 2, 3]
+    strings = ["Paris is the capital of France", "France's capital is Paris", "When someone visits France, they go to Paris", "Random"]
 
     model = EntailmentDeberta()
     classes = get_semantic_ids(strings, model)
