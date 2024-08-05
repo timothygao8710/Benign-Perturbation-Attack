@@ -1,5 +1,7 @@
 import pandas as pd
 import ast
+import random
+import string
 
 FEW_SHOT = """
 ######################
@@ -58,12 +60,12 @@ def get_is_correct_query(i):
     num_options = len(get_row_options(i))
 
     all_queries = []
-    for _ in range(num_options):
+    for option in range(num_options):
         query = ''
-        query += 'Question -\n\n' + get_row_question(i) + '\n\n'
-        query += 'As an extremely experienced and knowledgeable medical professional answering this question accurately, is the correct answer ' + get_ith_option(i, _)  + '?'
+        query += 'Question -\n\n' + get_row_question(i) + '\n\nChoices -\n\n' + getOptionsString(get_row_options(i))
+        query += 'As an extremely experienced and knowledgeable medical professional answering this question accurately, is the correct answer ' + get_ith_option(i, option)  + '? '
 
-        query += "Please answer with Yes or No."
+        # query += "Please answer with Yes or No."
         all_queries.append(query)
 
     return all_queries
@@ -74,6 +76,15 @@ def get_row_query(i):
     # query += FEW_SHOT
     query += 'Question -\n\n' + get_row_question(i) + '\n\nChoices -\n\n' + getOptionsString(get_row_options(i))
     query += '\nAs an extremely experienced and knowledgeable medical professional answering this question accurately, the letter of the correct answer is '
+    return query
+
+def get_peturbed_row_query(i, K):
+    query = ''
+
+    query += 'Question -\n\n' + perturb_input(get_row_question(i), K) + '\n\nChoices -\n\n' + getOptionsString(get_row_options(i))
+    query += '\nAs an extremely experienced and knowledgeable medical professional answering this question accurately, the letter of the correct answer is '
+
+    # print(query)
     return query
 
 # Function to get the question of a specific row
@@ -102,9 +113,12 @@ def getOptionsString(options):
 
 def get_ith_option(row, i):
     options = get_row_options(row)
+    
     if isinstance(options, str):
         options = strToDict(options)
-        
+    
+    options = [options[j] for j in options]
+
     return options[i].split('\n')[0]
 
 
@@ -116,6 +130,29 @@ def strToDict(Str):
         print(f"Error converting string to dictionary: {e}")
         return {}
 
+def perturb_input(input_text, edit_distance):
+    """
+    Randomly perturb the input text by the specified edit distance.
+    """
+    chars = list(input_text)
+    for _ in range(edit_distance):
+        operation = random.choice(['insert', 'delete', 'substitute'])
+        if operation == 'insert':
+            pos = random.randint(0, len(chars))
+            chars.insert(pos, random.choice(string.ascii_letters))
+        elif operation == 'delete' and chars:
+            pos = random.randint(0, len(chars) - 1)
+            chars.pop(pos)
+        elif operation == 'substitute' and chars:
+            pos = random.randint(0, len(chars) - 1)
+            chars[pos] = random.choice(string.ascii_letters)
+    return ''.join(chars)
+
 if __name__ == '__main__':
-    print(get_row_query(97))
-    print(get_correct_answer(97))
+    # print(get_is_correct_query(97))
+    # print(get_row_query(97))
+    # print(get_correct_answer(97))
+    
+    all_rows = []
+    
+    

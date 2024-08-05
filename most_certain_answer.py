@@ -9,12 +9,15 @@ import os
 from semantic_uncertainty.calc_entropy import get_entropy_from_probabilities
 from question_loader import *
 import pickle
+import numpy as np
 from utils import *
 
 ##### SETTINGS #####
 cache_dir = '/tmp'
 model_name = "meta-llama/Meta-Llama-3-8B-Instruct"
-possible_outputs = ["A", "B", "C", "D", "E", "F", "G", "H"]
+possible_outputs = ["Yes", "No"]
+letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"]
+# possible_outputs = ["A", "B", "C", "D", "E", "F", "G", "H"]
 batch_size = 8
 redownload = False
 data_outpath = './data/medqa_llama'
@@ -86,42 +89,24 @@ def get_next_token(prompt_batch, top_k=len(possible_outputs)):
 # Try to do chain of thought for "digging" based on how uncertian the model is
 
 tot_questions = get_data_len()
-n_samples = 2000
 print(tot_questions)
 
 res = []
 correct_count = 0
 
-with tqdm(total=n_samples) as pbar:
-    for _ in range(n_samples):
-        row = random.randrange(tot_questions)
-        cur_prompt = [get_row_query(row)]
+with tqdm(total=tot_questions) as pbar:
+    for row in range(tot_questions):
+        cur_prompts = get_is_correct_query(row)
 
-        response, probs = get_next_token(cur_prompt)
+        response, probs = get_next_token(cur_prompts)
 
-        entropy = get_entropy_from_probabilities(probs[0])
+        yes_probs = np.array([i[0] for i in probs])
 
-        model_ans = response[0][0]
-        model_ans_prob = probs[0][0]
-        cor_ans = get_correct_answer(row)
-
-        # Check if the model's answer is correct
-        is_correct = model_ans == cor_ans
+        model_ans = letters[np.argmax(yes_probs)]
+        is_correct = model_ans == get_correct_answer(row)
         if is_correct:
             correct_count += 1
 
         # Update progress bar with the current percentage of correct answers
-        pbar.set_postfix({'Correct %': f'{(correct_count / (_ + 1)) * 100:.2f}%'})
+        pbar.set_postfix({'Correct %': f'{(correct_count / (row + 1)) * 100:.2f}%'})
         pbar.update(1)
-
-        # print(row, is_correct, entropy, model_ans, cor_ans, probs[0])
-        res.append({
-                "row": row,
-                "entropy": entropy,
-                "is_correct": is_correct
-            })
-
-with open('acc_v_entropy.json', 'w') as file:
-    json.dump(str(res), file, indent=2)
-
-file.close()

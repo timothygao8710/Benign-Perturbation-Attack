@@ -22,8 +22,22 @@ def load(file_path):
     for row in data:
         output.append(row["is_correct"])
         cur_features = []
-        cur_features.append(row["model_prob"][0])
-        # cur_features.append(row["entropy"])
+        # cur_features.append(row["model_prob"][0])
+        cur_features.append(row["original_entropy"])
+        cur_features.append(row["peturbed_entropy_5"])
+        cur_features.append(row["same_sensitivity_5"])
+        # cur_features.append(row["correct_sensitivity_5"])
+        cur_features.append(row["peturbed_entropy_10"])
+        cur_features.append(row["same_sensitivity_10"])
+        # cur_features.append(row["correct_sensitivity_10"])
+        cur_features.append(row["peturbed_entropy_15"])
+        cur_features.append(row["same_sensitivity_15"])
+        # cur_features.append(row["correct_sensitivity_15"])
+        cur_features.append(row["peturbed_entropy_20"])
+        cur_features.append(row["same_sensitivity_20"])
+        cur_features.append(row["peturbed_entropy_25"])
+        cur_features.append(row["same_sensitivity_25"])
+        
         # cur_features.extend(row["model_prob"])
         # diffs = [row["model_prob"][i-1] - row["model_prob"][i] for i in range(1, len(row["model_prob"]))]
         # cur_features.extend(diffs)
@@ -32,8 +46,9 @@ def load(file_path):
         print(row)
     return features, output
 
-file_path = './data/medqa_llama'
+file_path = '/accounts/projects/binyu/timothygao/Benign-Perturbation-Attack/data/edit_distance_v_accuracy_K_10'
 features, output = load(file_path)
+
 
 # Convert to numpy arrays
 X = np.array(features)

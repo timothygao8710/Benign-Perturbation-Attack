@@ -1,5 +1,6 @@
 /accounts/projects/binyu/timothygao/.local/lib/python3.12/site-packages/transformers/utils/hub.py:127: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
   warnings.warn(
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
                                             question  ... meta_info
 0  A 4670-g (10-lb 5-oz) male newborn is delivere...  ...     step2
 1  A 66-year-old man comes to the physician for a...  ...     step2
@@ -9,72 +10,475 @@
 
 [5 rows x 4 columns]
 Traceback (most recent call last):
-  File "/accounts/projects/binyu/timothygao/.local/lib/python3.12/site-packages/huggingface_hub/utils/_errors.py", line 304, in hf_raise_for_status
-    response.raise_for_status()
-  File "/usr/local/linux/miniforge-3.12/lib/python3.12/site-packages/requests/models.py", line 1021, in raise_for_status
-    raise HTTPError(http_error_msg, response=self)
-requests.exceptions.HTTPError: 401 Client Error: Unauthorized for url: https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct/resolve/main/config.json
+  File "/accounts/projects/binyu/timothygao/Benign-Perturbation-Attack/sensitivity_v_accuracy.py", line 32, in <module>
+    model = AutoModelForCausalLM.from_pretrained(model_name, cache_dir=cache_dir, torch_dtype=torch.float16, device_map="auto")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/accounts/projects/binyu/timothygao/.local/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 564, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/accounts/projects/binyu/timothygao/.local/lib/python3.12/site-packages/transformers/modeling_utils.py", line 3199, in from_pretrained
+    raise ImportError(
+ImportError: Using `low_cpu_mem_usage=True` or a `device_map` requires Accelerate: `pip install accelerate`
+/accounts/projects/binyu/timothygao/.local/lib/python3.11/site-packages/transformers/utils/hub.py:127: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+                                            question  ... meta_info
+0  A 4670-g (10-lb 5-oz) male newborn is delivere...  ...     step2
+1  A 66-year-old man comes to the physician for a...  ...     step2
+2  A 40-year-old man comes to the physician becau...  ...     step2
+3  A 4-year-old boy is brought to the emergency d...  ...     step2
+4  A 9-year-old girl is brought to the emergency ...  ...     step2
 
-The above exception was the direct cause of the following exception:
+[5 rows x 4 columns]
 
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]
+Loading checkpoint shards:  25%|██▌       | 1/4 [00:04<00:12,  4.06s/it]
+Loading checkpoint shards:  50%|█████     | 2/4 [00:08<00:08,  4.09s/it]
+Loading checkpoint shards:  75%|███████▌  | 3/4 [00:12<00:04,  4.04s/it]
+Loading checkpoint shards: 100%|██████████| 4/4 [00:13<00:00,  2.84s/it]
+Loading checkpoint shards: 100%|██████████| 4/4 [00:13<00:00,  3.29s/it]
+
+  0%|          | 0/5000 [00:00<?, ?it/s]We detected that you are passing `past_key_values` as a tuple and this is deprecated and will be removed in v4.43. Please use an appropriate `Cache` class (https://huggingface.co/docs/transformers/v4.41.3/en/internal/generation_utils#transformers.Cache)
+
+  0%|          | 0/5000 [00:02<?, ?it/s, Correct %=100.00%]
+  0%|          | 1/5000 [00:02<2:56:14,  2.12s/it, Correct %=100.00%]
+  0%|          | 1/5000 [00:04<2:56:14,  2.12s/it, Correct %=50.00%] 
+  0%|          | 2/5000 [00:04<3:04:43,  2.22s/it, Correct %=50.00%]
+  0%|          | 2/5000 [00:07<3:04:43,  2.22s/it, Correct %=66.67%]
+  0%|          | 3/5000 [00:07<3:26:45,  2.48s/it, Correct %=66.67%]
+  0%|          | 3/5000 [00:09<3:26:45,  2.48s/it, Correct %=75.00%]
+  0%|          | 4/5000 [00:09<3:13:02,  2.32s/it, Correct %=75.00%]
+  0%|          | 4/5000 [00:10<3:13:02,  2.32s/it, Correct %=80.00%]
+  0%|          | 5/5000 [00:10<2:50:49,  2.05s/it, Correct %=80.00%]
+  0%|          | 5/5000 [00:13<2:50:49,  2.05s/it, Correct %=66.67%]
+  0%|          | 6/5000 [00:13<3:12:05,  2.31s/it, Correct %=66.67%]
+  0%|          | 6/5000 [00:16<3:12:05,  2.31s/it, Correct %=71.43%]
+  0%|          | 7/5000 [00:16<3:24:30,  2.46s/it, Correct %=71.43%]
+  0%|          | 7/5000 [00:18<3:24:30,  2.46s/it, Correct %=62.50%]
+  0%|          | 8/5000 [00:18<3:09:34,  2.28s/it, Correct %=62.50%]
+  0%|          | 8/5000 [00:20<3:09:34,  2.28s/it, Correct %=55.56%]
+  0%|          | 9/5000 [00:20<3:11:08,  2.30s/it, Correct %=55.56%]
+  0%|          | 9/5000 [00:23<3:11:08,  2.30s/it, Correct %=60.00%]
+  0%|          | 10/5000 [00:23<3:14:57,  2.34s/it, Correct %=60.00%]
+  0%|          | 10/5000 [00:25<3:14:57,  2.34s/it, Correct %=54.55%]
+  0%|          | 11/5000 [00:25<3:17:20,  2.37s/it, Correct %=54.55%]
+  0%|          | 11/5000 [00:26<3:17:20,  2.37s/it, Correct %=58.33%]
+  0%|          | 12/5000 [00:26<2:53:59,  2.09s/it, Correct %=58.33%]
+  0%|          | 12/5000 [00:30<2:53:59,  2.09s/it, Correct %=61.54%]
+  0%|          | 13/5000 [00:30<3:28:45,  2.51s/it, Correct %=61.54%]
+  0%|          | 13/5000 [00:32<3:28:45,  2.51s/it, Correct %=57.14%]
+  0%|          | 14/5000 [00:32<3:14:47,  2.34s/it, Correct %=57.14%]
+  0%|          | 14/5000 [00:35<3:14:47,  2.34s/it, Correct %=60.00%]
+  0%|          | 15/5000 [00:35<3:24:29,  2.46s/it, Correct %=60.00%]
+  0%|          | 15/5000 [00:36<3:24:29,  2.46s/it, Correct %=56.25%]
+  0%|          | 16/5000 [00:36<2:56:52,  2.13s/it, Correct %=56.25%]
+  0%|          | 16/5000 [00:38<2:56:52,  2.13s/it, Correct %=52.94%]
+  0%|          | 17/5000 [00:38<3:00:46,  2.18s/it, Correct %=52.94%]
+  0%|          | 17/5000 [00:41<3:00:46,  2.18s/it, Correct %=55.56%]
+  0%|          | 18/5000 [00:41<3:20:15,  2.41s/it, Correct %=55.56%]
+  0%|          | 18/5000 [00:45<3:20:15,  2.41s/it, Correct %=57.89%]
+  0%|          | 19/5000 [00:45<3:44:28,  2.70s/it, Correct %=57.89%]
+  0%|          | 19/5000 [00:46<3:44:28,  2.70s/it, Correct %=60.00%]
+  0%|          | 20/5000 [00:46<3:18:25,  2.39s/it, Correct %=60.00%]
+  0%|          | 20/5000 [00:49<3:18:25,  2.39s/it, Correct %=61.90%]
+  0%|          | 21/5000 [00:49<3:38:08,  2.63s/it, Correct %=61.90%]
+  0%|          | 21/5000 [00:52<3:38:08,  2.63s/it, Correct %=59.09%]
+  0%|          | 22/5000 [00:52<3:26:04,  2.48s/it, Correct %=59.09%]
+  0%|          | 22/5000 [00:53<3:26:04,  2.48s/it, Correct %=56.52%]
+  0%|          | 23/5000 [00:53<2:55:20,  2.11s/it, Correct %=56.52%]
+  0%|          | 23/5000 [00:58<2:55:20,  2.11s/it, Correct %=58.33%]
+  0%|          | 24/5000 [00:58<4:10:58,  3.03s/it, Correct %=58.33%]
+  0%|          | 24/5000 [01:00<4:10:58,  3.03s/it, Correct %=56.00%]
+  0%|          | 25/5000 [01:00<3:43:13,  2.69s/it, Correct %=56.00%]
+  0%|          | 25/5000 [01:02<3:43:13,  2.69s/it, Correct %=57.69%]
+  1%|          | 26/5000 [01:02<3:29:21,  2.53s/it, Correct %=57.69%]
+  1%|          | 26/5000 [01:06<3:29:21,  2.53s/it, Correct %=55.56%]
+  1%|          | 27/5000 [01:06<3:58:21,  2.88s/it, Correct %=55.56%]
+  1%|          | 27/5000 [01:08<3:58:21,  2.88s/it, Correct %=57.14%]
+  1%|          | 28/5000 [01:08<3:33:07,  2.57s/it, Correct %=57.14%]
+  1%|          | 28/5000 [01:10<3:33:07,  2.57s/it, Correct %=58.62%]
+  1%|          | 29/5000 [01:10<3:19:44,  2.41s/it, Correct %=58.62%]
+  1%|          | 29/5000 [01:11<3:19:44,  2.41s/it, Correct %=56.67%]
+  1%|          | 30/5000 [01:11<2:50:46,  2.06s/it, Correct %=56.67%]
+  1%|          | 30/5000 [01:13<2:50:46,  2.06s/it, Correct %=54.84%]
+  1%|          | 31/5000 [01:13<2:57:25,  2.14s/it, Correct %=54.84%]
+  1%|          | 31/5000 [01:15<2:57:25,  2.14s/it, Correct %=53.12%]
+  1%|          | 32/5000 [01:15<2:42:38,  1.96s/it, Correct %=53.12%]
+  1%|          | 32/5000 [01:17<2:42:38,  1.96s/it, Correct %=54.55%]
+  1%|          | 33/5000 [01:17<2:45:26,  2.00s/it, Correct %=54.55%]
+  1%|          | 33/5000 [01:19<2:45:26,  2.00s/it, Correct %=55.88%]
+  1%|          | 34/5000 [01:19<2:45:49,  2.00s/it, Correct %=55.88%]
+  1%|          | 34/5000 [01:21<2:45:49,  2.00s/it, Correct %=57.14%]
+  1%|          | 35/5000 [01:21<2:53:28,  2.10s/it, Correct %=57.14%]
+  1%|          | 35/5000 [01:23<2:53:28,  2.10s/it, Correct %=55.56%]
+  1%|          | 36/5000 [01:23<2:48:33,  2.04s/it, Correct %=55.56%]
+  1%|          | 36/5000 [01:25<2:48:33,  2.04s/it, Correct %=56.76%]
+  1%|          | 37/5000 [01:25<2:55:15,  2.12s/it, Correct %=56.76%]
+  1%|          | 37/5000 [01:28<2:55:15,  2.12s/it, Correct %=57.89%]
+  1%|          | 38/5000 [01:28<3:00:25,  2.18s/it, Correct %=57.89%]
+  1%|          | 38/5000 [01:32<3:00:25,  2.18s/it, Correct %=56.41%]
+  1%|          | 39/5000 [01:32<3:50:33,  2.79s/it, Correct %=56.41%]
+  1%|          | 39/5000 [01:34<3:50:33,  2.79s/it, Correct %=57.50%]
+  1%|          | 40/5000 [01:34<3:33:38,  2.58s/it, Correct %=57.50%]
+  1%|          | 40/5000 [01:38<3:33:38,  2.58s/it, Correct %=56.10%]
+  1%|          | 41/5000 [01:38<3:58:09,  2.88s/it, Correct %=56.10%]
+  1%|          | 41/5000 [01:40<3:58:09,  2.88s/it, Correct %=54.76%]
+  1%|          | 42/5000 [01:40<3:49:27,  2.78s/it, Correct %=54.76%]
+  1%|          | 42/5000 [01:42<3:49:27,  2.78s/it, Correct %=55.81%]
+  1%|          | 43/5000 [01:42<3:25:35,  2.49s/it, Correct %=55.81%]
+  1%|          | 43/5000 [01:43<3:25:35,  2.49s/it, Correct %=56.82%]
+  1%|          | 44/5000 [01:43<2:59:06,  2.17s/it, Correct %=56.82%]
+  1%|          | 44/5000 [01:45<2:59:06,  2.17s/it, Correct %=57.78%]
+  1%|          | 45/5000 [01:45<2:53:00,  2.10s/it, Correct %=57.78%]
+  1%|          | 45/5000 [01:48<2:53:00,  2.10s/it, Correct %=58.70%]
+  1%|          | 46/5000 [01:48<2:56:25,  2.14s/it, Correct %=58.70%]
+  1%|          | 46/5000 [01:49<2:56:25,  2.14s/it, Correct %=57.45%]
+  1%|          | 47/5000 [01:49<2:41:19,  1.95s/it, Correct %=57.45%]
+  1%|          | 47/5000 [01:52<2:41:19,  1.95s/it, Correct %=58.33%]
+  1%|          | 48/5000 [01:52<3:05:45,  2.25s/it, Correct %=58.33%]
+  1%|          | 48/5000 [01:55<3:05:45,  2.25s/it, Correct %=57.14%]
+  1%|          | 49/5000 [01:55<3:14:51,  2.36s/it, Correct %=57.14%]
+  1%|          | 49/5000 [01:56<3:14:51,  2.36s/it, Correct %=58.00%]
+  1%|          | 50/5000 [01:56<2:56:55,  2.14s/it, Correct %=58.00%]
+  1%|          | 50/5000 [02:00<2:56:55,  2.14s/it, Correct %=56.86%]
+  1%|          | 51/5000 [02:00<3:31:47,  2.57s/it, Correct %=56.86%]
+  1%|          | 51/5000 [02:02<3:31:47,  2.57s/it, Correct %=57.69%]
+  1%|          | 52/5000 [02:02<3:24:31,  2.48s/it, Correct %=57.69%]
+  1%|          | 52/5000 [02:05<3:24:31,  2.48s/it, Correct %=56.60%]
+  1%|          | 53/5000 [02:05<3:40:17,  2.67s/it, Correct %=56.60%]
+  1%|          | 53/5000 [02:08<3:40:17,  2.67s/it, Correct %=57.41%]
+  1%|          | 54/5000 [02:08<3:30:35,  2.55s/it, Correct %=57.41%]
+  1%|          | 54/5000 [02:09<3:30:35,  2.55s/it, Correct %=56.36%]
+  1%|          | 55/5000 [02:09<3:15:47,  2.38s/it, Correct %=56.36%]
+  1%|          | 55/5000 [02:12<3:15:47,  2.38s/it, Correct %=57.14%]
+  1%|          | 56/5000 [02:12<3:22:58,  2.46s/it, Correct %=57.14%]
+  1%|          | 56/5000 [02:15<3:22:58,  2.46s/it, Correct %=57.89%]
+  1%|          | 57/5000 [02:15<3:31:45,  2.57s/it, Correct %=57.89%]
+  1%|          | 57/5000 [02:17<3:31:45,  2.57s/it, Correct %=56.90%]
+  1%|          | 58/5000 [02:17<3:13:26,  2.35s/it, Correct %=56.90%]
+  1%|          | 58/5000 [02:19<3:13:26,  2.35s/it, Correct %=57.63%]
+  1%|          | 59/5000 [02:19<3:19:11,  2.42s/it, Correct %=57.63%]
+  1%|          | 59/5000 [02:22<3:19:11,  2.42s/it, Correct %=58.33%]
+  1%|          | 60/5000 [02:22<3:14:51,  2.37s/it, Correct %=58.33%]
+  1%|          | 60/5000 [02:24<3:14:51,  2.37s/it, Correct %=57.38%]
+  1%|          | 61/5000 [02:24<3:17:21,  2.40s/it, Correct %=57.38%]
+  1%|          | 61/5000 [02:27<3:17:21,  2.40s/it, Correct %=58.06%]
+  1%|          | 62/5000 [02:27<3:21:02,  2.44s/it, Correct %=58.06%]
+  1%|          | 62/5000 [02:28<3:21:02,  2.44s/it, Correct %=58.73%]
+  1%|▏         | 63/5000 [02:28<2:59:58,  2.19s/it, Correct %=58.73%]
+  1%|▏         | 63/5000 [02:31<2:59:58,  2.19s/it, Correct %=57.81%]
+  1%|▏         | 64/5000 [02:31<3:14:26,  2.36s/it, Correct %=57.81%]
+  1%|▏         | 64/5000 [02:33<3:14:26,  2.36s/it, Correct %=58.46%]
+  1%|▏         | 65/5000 [02:33<3:05:36,  2.26s/it, Correct %=58.46%]
+  1%|▏         | 65/5000 [02:36<3:05:36,  2.26s/it, Correct %=59.09%]
+  1%|▏         | 66/5000 [02:36<3:18:33,  2.41s/it, Correct %=59.09%]
+  1%|▏         | 66/5000 [02:37<3:18:33,  2.41s/it, Correct %=59.70%]
+  1%|▏         | 67/5000 [02:37<2:59:32,  2.18s/it, Correct %=59.70%]
+  1%|▏         | 67/5000 [02:40<2:59:32,  2.18s/it, Correct %=60.29%]
+  1%|▏         | 68/5000 [02:40<2:57:28,  2.16s/it, Correct %=60.29%]
+  1%|▏         | 68/5000 [02:41<2:57:28,  2.16s/it, Correct %=59.42%]
+  1%|▏         | 69/5000 [02:41<2:41:39,  1.97s/it, Correct %=59.42%]
+  1%|▏         | 69/5000 [02:43<2:41:39,  1.97s/it, Correct %=60.00%]
+  1%|▏         | 70/5000 [02:43<2:39:57,  1.95s/it, Correct %=60.00%]
+  1%|▏         | 70/5000 [02:45<2:39:57,  1.95s/it, Correct %=60.56%]
+  1%|▏         | 71/5000 [02:45<2:43:54,  2.00s/it, Correct %=60.56%]
+  1%|▏         | 71/5000 [02:47<2:43:54,  2.00s/it, Correct %=61.11%]
+  1%|▏         | 72/5000 [02:47<2:42:19,  1.98s/it, Correct %=61.11%]
+  1%|▏         | 72/5000 [02:50<2:42:19,  1.98s/it, Correct %=61.64%]
+  1%|▏         | 73/5000 [02:50<3:06:44,  2.27s/it, Correct %=61.64%]
+  1%|▏         | 73/5000 [02:52<3:06:44,  2.27s/it, Correct %=60.81%]
+  1%|▏         | 74/5000 [02:52<3:00:20,  2.20s/it, Correct %=60.81%]
+  1%|▏         | 74/5000 [02:56<3:00:20,  2.20s/it, Correct %=60.00%]
+  2%|▏         | 75/5000 [02:56<3:32:53,  2.59s/it, Correct %=60.00%]
+  2%|▏         | 75/5000 [02:58<3:32:53,  2.59s/it, Correct %=60.53%]
+  2%|▏         | 76/5000 [02:58<3:29:58,  2.56s/it, Correct %=60.53%]
+  2%|▏         | 76/5000 [02:59<3:29:58,  2.56s/it, Correct %=59.74%]
+  2%|▏         | 77/5000 [02:59<2:52:12,  2.10s/it, Correct %=59.74%]
+  2%|▏         | 77/5000 [03:02<2:52:12,  2.10s/it, Correct %=58.97%]
+  2%|▏         | 78/5000 [03:02<3:02:35,  2.23s/it, Correct %=58.97%]
+  2%|▏         | 78/5000 [03:04<3:02:35,  2.23s/it, Correct %=58.23%]
+  2%|▏         | 79/5000 [03:04<3:08:34,  2.30s/it, Correct %=58.23%]
+  2%|▏         | 79/5000 [03:06<3:08:34,  2.30s/it, Correct %=57.50%]
+  2%|▏         | 80/5000 [03:06<3:04:58,  2.26s/it, Correct %=57.50%]
+  2%|▏         | 80/5000 [03:08<3:04:58,  2.26s/it, Correct %=58.02%]
+  2%|▏         | 81/5000 [03:08<2:49:48,  2.07s/it, Correct %=58.02%]
+  2%|▏         | 81/5000 [03:09<2:49:48,  2.07s/it, Correct %=58.54%]
+  2%|▏         | 82/5000 [03:09<2:34:10,  1.88s/it, Correct %=58.54%]
+  2%|▏         | 82/5000 [03:12<2:34:10,  1.88s/it, Correct %=59.04%]
+  2%|▏         | 83/5000 [03:12<2:51:41,  2.10s/it, Correct %=59.04%]
+  2%|▏         | 83/5000 [03:13<2:51:41,  2.10s/it, Correct %=59.52%]
+  2%|▏         | 84/5000 [03:13<2:37:21,  1.92s/it, Correct %=59.52%]
+  2%|▏         | 84/5000 [03:17<2:37:21,  1.92s/it, Correct %=58.82%]
+  2%|▏         | 85/5000 [03:17<3:22:52,  2.48s/it, Correct %=58.82%]
+  2%|▏         | 85/5000 [03:20<3:22:52,  2.48s/it, Correct %=59.30%]
+  2%|▏         | 86/5000 [03:20<3:41:21,  2.70s/it, Correct %=59.30%]
+  2%|▏         | 86/5000 [03:23<3:41:21,  2.70s/it, Correct %=59.77%]
+  2%|▏         | 87/5000 [03:23<3:29:07,  2.55s/it, Correct %=59.77%]
+  2%|▏         | 87/5000 [03:25<3:29:07,  2.55s/it, Correct %=60.23%]
+  2%|▏         | 88/5000 [03:25<3:32:46,  2.60s/it, Correct %=60.23%]
+  2%|▏         | 88/5000 [03:27<3:32:46,  2.60s/it, Correct %=60.67%]
+  2%|▏         | 89/5000 [03:27<3:20:08,  2.45s/it, Correct %=60.67%]
+  2%|▏         | 89/5000 [03:30<3:20:08,  2.45s/it, Correct %=61.11%]
+  2%|▏         | 90/5000 [03:30<3:33:09,  2.60s/it, Correct %=61.11%]
+  2%|▏         | 90/5000 [03:32<3:33:09,  2.60s/it, Correct %=61.54%]
+  2%|▏         | 91/5000 [03:32<3:11:55,  2.35s/it, Correct %=61.54%]
+  2%|▏         | 91/5000 [03:35<3:11:55,  2.35s/it, Correct %=60.87%]
+  2%|▏         | 92/5000 [03:35<3:37:28,  2.66s/it, Correct %=60.87%]
+  2%|▏         | 92/5000 [03:37<3:37:28,  2.66s/it, Correct %=60.22%]
+  2%|▏         | 93/5000 [03:37<3:10:36,  2.33s/it, Correct %=60.22%]
+  2%|▏         | 93/5000 [03:43<3:10:36,  2.33s/it, Correct %=59.57%]
+  2%|▏         | 94/5000 [03:43<4:41:18,  3.44s/it, Correct %=59.57%]
+  2%|▏         | 94/5000 [03:44<4:41:18,  3.44s/it, Correct %=58.95%]
+  2%|▏         | 95/5000 [03:44<3:52:01,  2.84s/it, Correct %=58.95%]
+  2%|▏         | 95/5000 [03:47<3:52:01,  2.84s/it, Correct %=59.38%]
+  2%|▏         | 96/5000 [03:47<3:45:51,  2.76s/it, Correct %=59.38%]
+  2%|▏         | 96/5000 [03:50<3:45:51,  2.76s/it, Correct %=58.76%]
+  2%|▏         | 97/5000 [03:50<3:42:13,  2.72s/it, Correct %=58.76%]
+  2%|▏         | 97/5000 [03:52<3:42:13,  2.72s/it, Correct %=58.16%]
+  2%|▏         | 98/5000 [03:52<3:27:55,  2.55s/it, Correct %=58.16%]
+  2%|▏         | 98/5000 [03:54<3:27:55,  2.55s/it, Correct %=58.59%]
+  2%|▏         | 99/5000 [03:54<3:14:28,  2.38s/it, Correct %=58.59%]
+  2%|▏         | 99/5000 [03:56<3:14:28,  2.38s/it, Correct %=59.00%]
+  2%|▏         | 100/5000 [03:56<3:05:58,  2.28s/it, Correct %=59.00%]
+  2%|▏         | 100/5000 [03:59<3:05:58,  2.28s/it, Correct %=59.41%]
+  2%|▏         | 101/5000 [03:59<3:28:15,  2.55s/it, Correct %=59.41%]
+  2%|▏         | 101/5000 [04:01<3:28:15,  2.55s/it, Correct %=59.80%]
+  2%|▏         | 102/5000 [04:01<3:08:45,  2.31s/it, Correct %=59.80%]
+  2%|▏         | 102/5000 [04:03<3:08:45,  2.31s/it, Correct %=60.19%]
+  2%|▏         | 103/5000 [04:03<2:55:47,  2.15s/it, Correct %=60.19%]
+  2%|▏         | 103/5000 [04:05<2:55:47,  2.15s/it, Correct %=60.58%]
+  2%|▏         | 104/5000 [04:05<3:04:13,  2.26s/it, Correct %=60.58%]
+  2%|▏         | 104/5000 [04:08<3:04:13,  2.26s/it, Correct %=60.00%]
+  2%|▏         | 105/5000 [04:08<3:28:34,  2.56s/it, Correct %=60.00%]
+  2%|▏         | 105/5000 [04:10<3:28:34,  2.56s/it, Correct %=59.43%]
+  2%|▏         | 106/5000 [04:10<3:12:49,  2.36s/it, Correct %=59.43%]
+  2%|▏         | 106/5000 [04:12<3:12:49,  2.36s/it, Correct %=59.81%]
+  2%|▏         | 107/5000 [04:12<2:55:45,  2.16s/it, Correct %=59.81%]
+  2%|▏         | 107/5000 [04:14<2:55:45,  2.16s/it, Correct %=60.19%]
+  2%|▏         | 108/5000 [04:14<2:46:56,  2.05s/it, Correct %=60.19%]
+  2%|▏         | 108/5000 [04:17<2:46:56,  2.05s/it, Correct %=60.55%]
+  2%|▏         | 109/5000 [04:17<3:28:05,  2.55s/it, Correct %=60.55%]
+  2%|▏         | 109/5000 [04:20<3:28:05,  2.55s/it, Correct %=60.91%]
+  2%|▏         | 110/5000 [04:20<3:21:56,  2.48s/it, Correct %=60.91%]
+  2%|▏         | 110/5000 [04:23<3:21:56,  2.48s/it, Correct %=60.36%]
+  2%|▏         | 111/5000 [04:23<3:39:28,  2.69s/it, Correct %=60.36%]
+  2%|▏         | 111/5000 [04:26<3:39:28,  2.69s/it, Correct %=59.82%]
+  2%|▏         | 112/5000 [04:26<3:44:34,  2.76s/it, Correct %=59.82%]
+  2%|▏         | 112/5000 [04:28<3:44:34,  2.76s/it, Correct %=59.29%]
+  2%|▏         | 113/5000 [04:28<3:25:50,  2.53s/it, Correct %=59.29%]
+  2%|▏         | 113/5000 [04:29<3:25:50,  2.53s/it, Correct %=59.65%]
+  2%|▏         | 114/5000 [04:29<2:59:55,  2.21s/it, Correct %=59.65%]
+  2%|▏         | 114/5000 [04:32<2:59:55,  2.21s/it, Correct %=59.13%]
+  2%|▏         | 115/5000 [04:32<3:00:58,  2.22s/it, Correct %=59.13%]
+  2%|▏         | 115/5000 [04:35<3:00:58,  2.22s/it, Correct %=59.48%]
+  2%|▏         | 116/5000 [04:35<3:32:13,  2.61s/it, Correct %=59.48%]
+  2%|▏         | 116/5000 [04:38<3:32:13,  2.61s/it, Correct %=58.97%]
+  2%|▏         | 117/5000 [04:38<3:34:37,  2.64s/it, Correct %=58.97%]
+  2%|▏         | 117/5000 [04:40<3:34:37,  2.64s/it, Correct %=59.32%]
+  2%|▏         | 118/5000 [04:40<3:23:07,  2.50s/it, Correct %=59.32%]
+  2%|▏         | 118/5000 [04:42<3:23:07,  2.50s/it, Correct %=59.66%]
+  2%|▏         | 119/5000 [04:42<3:05:15,  2.28s/it, Correct %=59.66%]
+  2%|▏         | 119/5000 [04:45<3:05:15,  2.28s/it, Correct %=60.00%]
+  2%|▏         | 120/5000 [04:45<3:26:41,  2.54s/it, Correct %=60.00%]
+  2%|▏         | 120/5000 [04:48<3:26:41,  2.54s/it, Correct %=60.33%]
+  2%|▏         | 121/5000 [04:48<3:45:04,  2.77s/it, Correct %=60.33%]
+  2%|▏         | 121/5000 [04:50<3:45:04,  2.77s/it, Correct %=60.66%]
+  2%|▏         | 122/5000 [04:50<3:27:47,  2.56s/it, Correct %=60.66%]
+  2%|▏         | 122/5000 [04:52<3:27:47,  2.56s/it, Correct %=60.98%]
+  2%|▏         | 123/5000 [04:52<3:01:30,  2.23s/it, Correct %=60.98%]
+  2%|▏         | 123/5000 [04:55<3:01:30,  2.23s/it, Correct %=61.29%]
+  2%|▏         | 124/5000 [04:55<3:17:31,  2.43s/it, Correct %=61.29%]
+  2%|▏         | 124/5000 [04:57<3:17:31,  2.43s/it, Correct %=61.60%]
+  2%|▎         | 125/5000 [04:57<3:14:19,  2.39s/it, Correct %=61.60%]
+  2%|▎         | 125/5000 [05:00<3:14:19,  2.39s/it, Correct %=61.90%]
+  3%|▎         | 126/5000 [05:00<3:32:04,  2.61s/it, Correct %=61.90%]
+  3%|▎         | 126/5000 [05:02<3:32:04,  2.61s/it, Correct %=62.20%]
+  3%|▎         | 127/5000 [05:02<3:07:34,  2.31s/it, Correct %=62.20%]
+  3%|▎         | 127/5000 [05:04<3:07:34,  2.31s/it, Correct %=61.72%]
+  3%|▎         | 128/5000 [05:04<3:04:49,  2.28s/it, Correct %=61.72%]
+  3%|▎         | 128/5000 [05:05<3:04:49,  2.28s/it, Correct %=61.24%]
+  3%|▎         | 129/5000 [05:05<2:49:08,  2.08s/it, Correct %=61.24%]
+  3%|▎         | 129/5000 [05:08<2:49:08,  2.08s/it, Correct %=60.77%]
+  3%|▎         | 130/5000 [05:08<2:53:11,  2.13s/it, Correct %=60.77%]
+  3%|▎         | 130/5000 [05:12<2:53:11,  2.13s/it, Correct %=60.31%]
+  3%|▎         | 131/5000 [05:12<3:36:29,  2.67s/it, Correct %=60.31%]
+  3%|▎         | 131/5000 [05:15<3:36:29,  2.67s/it, Correct %=59.85%]
+  3%|▎         | 132/5000 [05:15<3:42:15,  2.74s/it, Correct %=59.85%]
+  3%|▎         | 132/5000 [05:18<3:42:15,  2.74s/it, Correct %=59.40%]
+  3%|▎         | 133/5000 [05:18<4:10:46,  3.09s/it, Correct %=59.40%]
+  3%|▎         | 133/5000 [05:20<4:10:46,  3.09s/it, Correct %=59.70%]
+  3%|▎         | 134/5000 [05:20<3:35:10,  2.65s/it, Correct %=59.70%]
+  3%|▎         | 134/5000 [05:22<3:35:10,  2.65s/it, Correct %=59.26%]
+  3%|▎         | 135/5000 [05:22<3:28:48,  2.58s/it, Correct %=59.26%]
+  3%|▎         | 135/5000 [05:25<3:28:48,  2.58s/it, Correct %=59.56%]
+  3%|▎         | 136/5000 [05:25<3:27:13,  2.56s/it, Correct %=59.56%]
+  3%|▎         | 136/5000 [05:27<3:27:13,  2.56s/it, Correct %=59.85%]
+  3%|▎         | 137/5000 [05:27<3:09:48,  2.34s/it, Correct %=59.85%]
+  3%|▎         | 137/5000 [05:29<3:09:48,  2.34s/it, Correct %=59.42%]
+  3%|▎         | 138/5000 [05:29<3:04:08,  2.27s/it, Correct %=59.42%]
+  3%|▎         | 138/5000 [05:31<3:04:08,  2.27s/it, Correct %=58.99%]
+  3%|▎         | 139/5000 [05:31<2:55:40,  2.17s/it, Correct %=58.99%]
+  3%|▎         | 139/5000 [05:35<2:55:40,  2.17s/it, Correct %=59.29%]
+  3%|▎         | 140/5000 [05:35<3:39:01,  2.70s/it, Correct %=59.29%]
+  3%|▎         | 140/5000 [05:37<3:39:01,  2.70s/it, Correct %=58.87%]
+  3%|▎         | 141/5000 [05:37<3:18:30,  2.45s/it, Correct %=58.87%]
+  3%|▎         | 141/5000 [05:43<3:17:04,  2.43s/it, Correct %=58.87%]
+  
+0.1 True
+0.79 False
+0.0 True
+0.29 True
+0.66 True
+0.0 False
+0.83 True
+0.72 False
+0.15 False
+0.0 True
+0.0 False
+0.98 True
+0.0 True
+0.98 False
+0.86 True
+0.0 False
+0.43 False
+0.15 True
+0.15 True
+0.84 True
+0.85 True
+0.93 False
+0.99 False
+0.99 True
+0.02 False
+0.98 True
+0.0 False
+0.0 True
+0.87 True
+0.99 False
+0.93 False
+0.71 False
+0.96 True
+0.94 True
+0.2 True
+0.98 False
+0.0 True
+0.49 True
+0.98 False
+0.47 True
+0.98 False
+0.77 False
+0.13 True
+0.3 True
+0.96 True
+0.98 True
+0.91 False
+0.96 True
+0.98 False
+0.56 True
+0.0 False
+0.5 True
+0.03 False
+0.0 True
+0.0 False
+0.84 True
+0.58 True
+0.0 False
+0.01 True
+0.0 True
+1.0 False
+0.04 True
+0.97 True
+0.86 False
+0.94 True
+0.88 True
+0.51 True
+0.0 True
+0.96 False
+0.73 True
+0.0 True
+0.09 True
+0.0 True
+0.0 False
+0.99 False
+0.55 True
+0.01 False
+0.02 False
+0.0 False
+0.1 False
+0.84 True
+0.0 True
+0.92 True
+0.0 True
+0.69 False
+0.43 True
+0.0 True
+0.89 True
+0.0 True
+0.98 True
+0.41 True
+0.85 False
+0.05 False
+0.74 False
+0.94 False
+0.98 True
+0.97 False
+0.0 False
+0.01 True
+0.0 True
+0.78 True
+0.07 True
+0.13 True
+0.0 True
+0.98 False
+0.18 False
+0.0 True
+0.0 True
+0.09 True
+0.04 True
+0.19 False
+0.0 False
+0.05 False
+0.02 True
+0.02 False
+0.91 True
+0.98 False
+0.97 True
+0.36 True
+0.96 True
+0.61 True
+0.01 True
+0.77 True
+0.98 True
+0.99 True
+0.98 True
+0.04 True
+0.98 False
+0.64 False
+0.0 False
+0.87 False
+0.01 False
+0.0 False
+0.39 True
+1.0 False
+0.03 True
+0.0 True
+0.0 False
+0.56 False
+0.98 True
+0.07 False
 Traceback (most recent call last):
-  File "/accounts/projects/binyu/timothygao/.local/lib/python3.12/site-packages/transformers/utils/hub.py", line 402, in cached_file
-    resolved_file = hf_hub_download(
-                    ^^^^^^^^^^^^^^^^
-  File "/accounts/projects/binyu/timothygao/.local/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
-    return fn(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^
-  File "/accounts/projects/binyu/timothygao/.local/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1221, in hf_hub_download
-    return _hf_hub_download_to_cache_dir(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/accounts/projects/binyu/timothygao/.local/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1325, in _hf_hub_download_to_cache_dir
-    _raise_on_head_call_error(head_call_error, force_download, local_files_only)
-  File "/accounts/projects/binyu/timothygao/.local/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1823, in _raise_on_head_call_error
-    raise head_call_error
-  File "/accounts/projects/binyu/timothygao/.local/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1722, in _get_metadata_or_catch_error
-    metadata = get_hf_file_metadata(url=url, proxies=proxies, timeout=etag_timeout, headers=headers)
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/accounts/projects/binyu/timothygao/.local/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
-    return fn(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^
-  File "/accounts/projects/binyu/timothygao/.local/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 1645, in get_hf_file_metadata
-    r = _request_wrapper(
-        ^^^^^^^^^^^^^^^^^
-  File "/accounts/projects/binyu/timothygao/.local/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 372, in _request_wrapper
-    response = _request_wrapper(
-               ^^^^^^^^^^^^^^^^^
-  File "/accounts/projects/binyu/timothygao/.local/lib/python3.12/site-packages/huggingface_hub/file_download.py", line 396, in _request_wrapper
-    hf_raise_for_status(response)
-  File "/accounts/projects/binyu/timothygao/.local/lib/python3.12/site-packages/huggingface_hub/utils/_errors.py", line 321, in hf_raise_for_status
-    raise GatedRepoError(message, response) from e
-huggingface_hub.utils._errors.GatedRepoError: 401 Client Error. (Request ID: Root=1-669e6ed9-4d05e75b5d30601c13f56c2f;9b6f3fe9-1e8d-4472-a29f-fcaee400606e)
-
-Cannot access gated repo for url https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct/resolve/main/config.json.
-Access to model meta-llama/Meta-Llama-3-8B-Instruct is restricted. You must be authenticated to access it.
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/accounts/projects/binyu/timothygao/Benign-Perturbation-Attack/experiment.py", line 22, in <module>
-    tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir=cache_dir)
-                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/accounts/projects/binyu/timothygao/.local/lib/python3.12/site-packages/transformers/models/auto/tokenization_auto.py", line 846, in from_pretrained
-    config = AutoConfig.from_pretrained(
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/accounts/projects/binyu/timothygao/.local/lib/python3.12/site-packages/transformers/models/auto/configuration_auto.py", line 965, in from_pretrained
-    config_dict, unused_kwargs = PretrainedConfig.get_config_dict(pretrained_model_name_or_path, **kwargs)
-                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/accounts/projects/binyu/timothygao/.local/lib/python3.12/site-packages/transformers/configuration_utils.py", line 632, in get_config_dict
-    config_dict, kwargs = cls._get_config_dict(pretrained_model_name_or_path, **kwargs)
-                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/accounts/projects/binyu/timothygao/.local/lib/python3.12/site-packages/transformers/configuration_utils.py", line 689, in _get_config_dict
-    resolved_config_file = cached_file(
-                           ^^^^^^^^^^^^
-  File "/accounts/projects/binyu/timothygao/.local/lib/python3.12/site-packages/transformers/utils/hub.py", line 420, in cached_file
-    raise EnvironmentError(
-OSError: You are trying to access a gated repo.
-Make sure to have access to it at https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct.
-401 Client Error. (Request ID: Root=1-669e6ed9-4d05e75b5d30601c13f56c2f;9b6f3fe9-1e8d-4472-a29f-fcaee400606e)
-
-Cannot access gated repo for url https://huggingface.co/meta-llama/Meta-Llama-3-8B-Instruct/resolve/main/config.json.
-Access to model meta-llama/Meta-Llama-3-8B-Instruct is restricted. You must be authenticated to access it.
+  File "/accounts/projects/binyu/timothygao/Benign-Perturbation-Attack/sensitivity_v_accuracy.py", line 120, in <module>
+    perturbed_responses, _ = get_next_token(perturbed_prompts)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/accounts/projects/binyu/timothygao/Benign-Perturbation-Attack/sensitivity_v_accuracy.py", line 49, in get_next_token
+    outputs = model(**inputs)
+              ^^^^^^^^^^^^^^^
+  File "/scratch/users/timothygao/conda/envs/semantic_uncertainty/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/users/timothygao/conda/envs/semantic_uncertainty/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/accounts/projects/binyu/timothygao/.local/lib/python3.11/site-packages/transformers/models/llama/modeling_llama.py", line 1194, in forward
+    logits = logits.float()
+             ^^^^^^^^^^^^^^
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 27.90 GiB. GPU 

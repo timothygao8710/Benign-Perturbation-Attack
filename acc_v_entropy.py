@@ -25,6 +25,41 @@ if redownload:
     if os.path.exists(model_cache_path):
         os.rmdir(model_cache_path)
 
+# Turning into classifier
+# Use longer responses, see which one is better --> logit bias or entailment w/out logit bias
+# average log prob over sentence nromalized
+
+# Semnatic entropy, [Prob of A, Prob of B...], [Diff of A, Diff of B...], embedding layer probs
+
+# 73% - something in the prompt that makes model over confident
+# Feeding in semantically similar prompts into model
+
+# Sentence normalized average semantic entropy over all tokens...???
+
+# One metric: How much performance improvement by ignoring low confidence samples
+
+### TODO: Finish finding corr bewteen acc and entropy. Sensitivity vs entropy. Ability to be quantized (inference speed, important for medical) vs entropy?
+## TODO: ADD AUROC for analysis!!! <<--- nvm, just add desntiy plot plz
+# In general, analyze relationship between sem entropy and things for medical setting.
+# Then, prefix search (randomly), try to finid at least one that is non-negative accuracy delta
+# Try to do chain of thought for "digging" based on how uncertian the model is
+
+# How to make LLM better at estimating how confident it is in its answer
+# Intuitively, can we actually do better thanusing embedding layer? Because there's the idea might just be confidently wrong... if its unsure that would be reflected in 
+
+# semantic entropy over all perturbations
+# semantically similar prompts, how much does the model's confidence change?
+# thoguht experiemtns?
+
+# try different perrubation methods (levels (characters, word, setnence/semantic similar))
+
+# TODO: Find pattern in hallucinated vs non-hullucated prmopts. Try to find why, to decerase confident wrorng answers
+# TODO: Instead of using edit distance, can we add noise directly to the embedding layer? (semantic noise)
+# Look at attention weights, see if there's a pattern in the attention weights that are wrong
+
+# features: semantic entropy, perturbations, 
+
+# write down time for experiemetn
 
 tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir=cache_dir)
 model = AutoModelForCausalLM.from_pretrained(model_name, cache_dir=cache_dir, torch_dtype=torch.float16, device_map="auto")
@@ -77,56 +112,6 @@ def get_next_token(prompt_batch, top_k=len(possible_outputs)):
 #     print(probs)
 
 #     print([get_entropy_from_probabilities(i) for i in probs])
-
-
-### TODO: Finish finding corr bewteen acc and entropy. Sensitivity vs entropy. Ability to be quantized (inference speed, important for medical) vs entropy?
-## TODO: ADD AUROC for analysis!!! <<--- nvm, just add desntiy plot plz
-# In general, analyze relationship between sem entropy and things for medical setting.
-# Then, prefix search (randomly), try to finid at least one that is non-negative accuracy delta
-# Try to do chain of thought for "digging" based on how uncertian the model is
-
-# tot_questions = get_data_len()
-# n_samples = 2000
-# print(tot_questions)
-
-# res = []
-# correct_count = 0
-
-# with tqdm(total=n_samples) as pbar:
-#     for _ in range(n_samples):
-#         row = random.randrange(tot_questions)
-#         cur_prompt = [get_row_query(row)]
-
-#         response, probs = get_next_token(cur_prompt)
-
-#         entropy = get_entropy_from_probabilities(probs[0])
-
-#         model_ans = response[0][0]
-#         model_ans_prob = probs[0][0]
-#         cor_ans = get_correct_answer(row)
-
-#         # Check if the model's answer is correct
-#         is_correct = model_ans == cor_ans
-#         if is_correct:
-#             correct_count += 1
-
-#         # Update progress bar with the current percentage of correct answers
-#         pbar.set_postfix({'Correct %': f'{(correct_count / (_ + 1)) * 100:.2f}%'})
-#         pbar.update(1)
-
-#         # print(row, is_correct, entropy, model_ans, cor_ans, probs[0])
-#         res.append({
-#                 "row": row,
-#                 "entropy": entropy,
-#                 "is_correct": is_correct
-#             })
-
-# with open('acc_v_entropy.json', 'w') as file:
-#     json.dump(str(res), file, indent=2)
-
-# file.close()
-
-
 
 tot_questions = get_data_len()
 # n_samples = 2000
