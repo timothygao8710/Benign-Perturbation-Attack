@@ -1,5 +1,12 @@
 srun -p jsteinhardt --gres=gpu:A100:1 --pty /bin/zsh
 
+
+srun -p yugroup --gres=gpu:A100:1 --pty /bin/zsh
+
 srun -p jsteinhardt --mem=100G  --gres=gpu:A100:1 --pty /bin/zsh
 
 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
+
+tmux new -s job_monitor
+sbatch --output=job_output.txt job.sh
+tail -f job_output.txt

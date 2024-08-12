@@ -1,114 +1,158 @@
-import random
-import string
+import numpy as np
 from tqdm import tqdm
-import json
-from transformers import AutoTokenizer, AutoModelForCausalLM
-import torch
-import torch.nn.functional as F
-from semantic_uncertainty.calc_entropy import get_entropy_from_probabilities
 from question_loader import *
+from utils import *
+from collections import deque
+from LLM import *
+from itertools import permutations
 
-# Settings
+##### SETTINGS #####
 cache_dir = '/tmp'
-model_name = "meta-llama/Meta-Llama-3-8B-Instruct"
-possible_outputs = ["A", "B", "C", "D", "E", "F", "G", "H"]
-batch_size = 8
-n_samples = 200
-n_prefix_attempts = int(1e6)
-max_prefix_length = 20
-baseline_value = 0.63  # 63% baseline
+possible_outputs = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"]
+data_outpath = './data/experiment'
+######################
 
-# Load model and tokenizer
-tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir=cache_dir)
-model = AutoModelForCausalLM.from_pretrained(model_name, cache_dir=cache_dir, torch_dtype=torch.float16, device_map="auto")
-tokenizer.pad_token = tokenizer.eos_token
+def topological_sort(adjacency_matrix):
+    # Number of nodes in the graph
+    num_nodes = len(adjacency_matrix)
+    
+    # Calculate in-degrees of all nodes
+    in_degree = [0] * num_nodes
+    for i in range(num_nodes):
+        for j in range(num_nodes):
+            if adjacency_matrix[i][j] != 0:
+                in_degree[j] += 1
+    
+    # Initialize a queue with all nodes having in-degree of 0
+    queue = deque([i for i in range(num_nodes) if in_degree[i] == 0])
+    
+    topological_order = []
+    
+    while queue:
+        node = queue.popleft()
+        topological_order.append(node)
+        
+        # Reduce the in-degree of all neighbors by 1
+        for neighbor in range(num_nodes):
+            if adjacency_matrix[node][neighbor] != 0:
+                in_degree[neighbor] -= 1
+                if in_degree[neighbor] == 0:
+                    queue.append(neighbor)
+    
+    # If the topological order includes all nodes, return it
+    if len(topological_order) == num_nodes:
+        return topological_order
+    else:
+        # There is a cycle, return None
+        return None
 
-def generate_random_prefix(max_length):
-    length = random.randint(5, max_length)
-    return ''.join(random.choice(string.ascii_letters + string.digits + string.punctuation + ' ') for _ in range(length))
+def count_violations(order, adj_matrix):
+    violations = 0
+    n = len(order)
+    for i in range(n):
+        for j in range(0, i):
+            violations += adj_matrix[order[j], order[i]]    
+    return violations
 
-def get_next_token(prompt_batch, top_k=len(possible_outputs)):
-    inputs = tokenizer(prompt_batch, padding=True, return_tensors="pt").to(model.device)
-    allowed_tokens = tokenizer.convert_tokens_to_ids(possible_outputs)
-    logits_bias = torch.full((len(prompt_batch), model.config.vocab_size), -float('inf')).to(model.device)
-    logits_bias[:, allowed_tokens] = 0
+def minimum_violations_topo_sort(adj_matrix):
+    # n = len(adj_matrix)
+    # nodes = list(range(n))
+    
+    # min_violations = float('inf')
+    # best_order = None
+    
+    # for order in permutations(nodes):
+    #     violations = count_violations(order, adj_matrix)
+    #     if violations < min_violations:
+    #         min_violations = violations
+    #         best_order = order
+    
+    # # print(best_order, min_violations)
+    # return (best_order, min_violations)
+    
+    res = (-1e9, -1)
+    for i in range(len(adj_matrix)):
+        cur = 0
+        for j in range(len(adj_matrix)):
+            cur += adj_matrix[i, j]
+            cur -= adj_matrix[j, i]
+            
+        res = max(res, (cur, i))
+        
+    print(res)
+    return (res[1], res[0])
+            
+n_samples = 100
 
-    with torch.no_grad():
-        outputs = model(**inputs)
-        next_token_logits = outputs.logits[:, -1, :] + logits_bias
-        probs = F.softmax(next_token_logits, dim=-1)
-        top_k_probs, top_k_indices = torch.topk(probs, k=top_k, dim=-1)
+res = []
+correct_count = 0
 
-    top_k_responses = [tokenizer.convert_ids_to_tokens(top_k_indices[i]) for i in range(len(prompt_batch))]
-    return top_k_responses, top_k_probs.cpu().numpy()
+with tqdm(total=n_samples) as pbar:
+    for row in range(n_samples):
+        row_options = getOptionsArr(row)
+        M = len(row_options)
+        adj_matrix = np.zeros((M, M))
+        
+        get_prompt = get_compare_query_func(row)
+        
+        for i in range(M):
+            for j in range(M):
+                if i == j:
+                    continue
+                    
+                cur = get_prompt(i, j)
+                
+                # print('=' * 50)
+                # print(i, j)
+                # print('=' * 50)
+                # print(cur)
+                # print('=' * 50)
+                
+                response, probs = get_next_token_fast(cur)
+                
+                # print("BRUH", cur, response, probs)
+                # print("RESPONSE", i, j, response[0])
+                print(response, probs)
+                if response[0] == 'A':
+                    adj_matrix[i, j] += probs[0] # i preferred over j.... Try prob
+                elif response[0] == 'B':
+                    adj_matrix[j, i] += probs[0] # j perferred over i
+                # else:
+                #     print("None")
 
-def evaluate_accuracy(prefix=""):
-    tot_questions = get_data_len()
-    correct_count = 0
-
-    for _ in range(n_samples):
-        row = random.randrange(tot_questions)
-        cur_prompt = [get_row_query(row) + '\n\n' + prefix]
-        response, probs = get_next_token(cur_prompt)
-
-        model_ans = response[0][0]
+        # print(adj_matrix)
+        print_graph_from_adj_matrix(adj_matrix)
+        # order = topological_sort(adj_matrix)
+        # violations = 0
+        
+        # if order is None:
+        order, violations = minimum_violations_topo_sort(adj_matrix)
+        
+        # model_ans = row_options[order[0]][0]
+        # model_ans = row_options[order[-1]][0] ## CHANGE THISS
+        print(order, violations)
+        model_ans = row_options[int(order)][0] ## CHANGE THISS
         cor_ans = get_correct_answer(row)
+        
+        print(model_ans, cor_ans, order, row_options)
+        assert cor_ans in possible_outputs
 
-        if model_ans == cor_ans:
+        # print(order, row_options, cor_ans)
+
+        is_correct = model_ans == cor_ans
+        if is_correct:
             correct_count += 1
 
-    return correct_count / n_samples
+        pbar.set_postfix({'Correct %': f'{(correct_count / (row + 1)) * 100:.2f}%'})
+        pbar.update(1)
 
-def find_better_prefixes():
-    # baseline_accuracy = evaluate_accuracy()  # Baseline accuracy without prefix
-    baseline_accuracy = baseline_value
-    print(f"Baseline accuracy: {baseline_accuracy:.2%}")
+        # print(row, is_correct, entropy, model_ans, cor_ans, probs[0])
+        res.append({
+                "row": row,
+                "violations": violations,
+                "is_correct": is_correct,
+                "model_prob":probs[0],
+                "model_response":response[0]
+            })
 
-    better_prefixes = []
-
-    for _ in tqdm(range(n_prefix_attempts)):
-        current_prefix = generate_random_prefix(max_prefix_length)
-        current_accuracy = evaluate_accuracy(current_prefix)
-
-        if current_accuracy > baseline_value:
-            better_prefixes.append((current_prefix, current_accuracy))
-            print(f"Prefix found above baseline: '{current_prefix}' with accuracy: {current_accuracy:.2%}")
-
-    return better_prefixes, baseline_accuracy
-
-if __name__ == '__main__':
-    better_prefixes, baseline_accuracy = find_better_prefixes()
-    
-    print(f"\nBaseline accuracy: {baseline_accuracy:.2%}")
-    print(f"Number of prefixes found above {baseline_value:.2%} baseline: {len(better_prefixes)}")
-
-    if better_prefixes:
-        print("\nPrefixes that performed better than the baseline:")
-        for prefix, accuracy in better_prefixes:
-            print(f"Prefix: '{prefix}', Accuracy: {accuracy:.2%}")
-
-        # Sort prefixes by accuracy and get the best one
-        best_prefix, best_accuracy = max(better_prefixes, key=lambda x: x[1])
-        print(f"\nBest prefix found: '{best_prefix}'")
-        print(f"Best accuracy: {best_accuracy:.2%}")
-
-        # Save results
-        results = {
-            "baseline_accuracy": baseline_accuracy,
-            "baseline_value": baseline_value,
-            "better_prefixes": [{"prefix": p, "accuracy": a} for p, a in better_prefixes],
-            "best_prefix": best_prefix,
-            "best_accuracy": best_accuracy
-        }
-    else:
-        print("\nNo prefixes found that performed better than the baseline.")
-        results = {
-            "baseline_accuracy": baseline_accuracy,
-            "baseline_value": baseline_value,
-            "better_prefixes": []
-        }
-    
-    with open('prefix_search_results.json', 'w') as file:
-        json.dump(results, file, indent=2)
-
-    print("Results saved to 'prefix_search_results.json'")
+dump_data(res, data_outpath)

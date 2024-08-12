@@ -7,11 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, roc_curve, auc
 import seaborn as sns
-
-def load_data(file_path):
-    with open(file_path, 'r') as file:
-        data_str = json.load(file)
-        return ast.literal_eval(data_str)
+from utils import load_data
 
 def analyze_data(data):
     entropies = np.array([item['entropy'] for item in data]).reshape(-1, 1)
@@ -98,8 +94,8 @@ def plot_results(results, model, X_test, y_test, y_pred):
     plt.close()
 
 def get_sorted_entropy_lists(data):
-    correct_answers = [(i, item['entropy']) for i, item in enumerate(data) if item['is_correct']]
-    incorrect_answers = [(i, item['entropy']) for i, item in enumerate(data) if not item['is_correct']]
+    correct_answers = [(i, item['entropy'], item['model_response']) for i, item in enumerate(data) if item['is_correct']]
+    incorrect_answers = [(i, item['entropy'], item['model_response']) for i, item in enumerate(data) if not item['is_correct']]
     
     highest_entropy_correct = sorted(correct_answers, key=lambda x: x[1], reverse=True)[:10]
     lowest_entropy_incorrect = sorted(incorrect_answers, key=lambda x: x[1])[:10]
@@ -107,9 +103,9 @@ def get_sorted_entropy_lists(data):
     return highest_entropy_correct, lowest_entropy_incorrect
 
 def main():
-    file_path = 'acc_v_entropy.json'
+    file_path = '/accounts/projects/binyu/timothygao/Benign-Perturbation-Attack/data/all_entropies'
     data = load_data(file_path)
-    results = analyze_data(data)
+    # results = analyze_data(data)
 
     # print(f"Number of samples: {len(data)}")
     # print(f"Correlation between entropy and correctness: {results['correlation']:.4f}")
@@ -137,12 +133,12 @@ def main():
     highest_entropy_correct, lowest_entropy_incorrect = get_sorted_entropy_lists(data)
     
     print("\nTop 10 Highest Entropy Correct Answers:")
-    for row, entropy in highest_entropy_correct:
-        print(f"Row: {row}, Entropy: {entropy:.4f}")
+    for row, entropy, model_response in highest_entropy_correct:
+        print(f"Row: {row}, Entropy: {entropy:.4f}, Model Response: {model_response}")
     
     print("\nTop 10 Lowest Entropy Incorrect Answers:")
-    for row, entropy in lowest_entropy_incorrect:
-        print(f"Row: {row}, Entropy: {entropy:.4f}")
+    for row, entropy, model_response in lowest_entropy_incorrect:
+        print(f"Row: {row}, Entropy: {entropy:.4f}, Model Response: {model_response}")
 
 if __name__ == "__main__":
     main()

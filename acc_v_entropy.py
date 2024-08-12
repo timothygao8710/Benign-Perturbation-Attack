@@ -10,6 +10,8 @@ from semantic_uncertainty.calc_entropy import get_entropy_from_probabilities
 from question_loader import *
 import pickle
 from utils import *
+from LLM import get_next_token_fast
+import numpy as np
 
 ##### SETTINGS #####
 cache_dir = '/tmp'
@@ -17,7 +19,7 @@ model_name = "meta-llama/Meta-Llama-3-8B-Instruct"
 possible_outputs = ["A", "B", "C", "D", "E", "F", "G", "H"]
 batch_size = 8
 redownload = False
-data_outpath = './data/medqa_llama'
+data_outpath = './data/all_entropies'
 ######################
 
 if redownload:
@@ -61,48 +63,14 @@ if redownload:
 
 # write down time for experiemetn
 
-tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir=cache_dir)
-model = AutoModelForCausalLM.from_pretrained(model_name, cache_dir=cache_dir, torch_dtype=torch.float16, device_map="auto")
-tokenizer.pad_token = tokenizer.eos_token
-
-def torch_to_numpy(torch_tensor):
-    return torch_tensor.detach().cpu().numpy()
-
-def get_next_token(prompt_batch, top_k=len(possible_outputs)):
-    inputs = tokenizer(prompt_batch, padding = True, return_tensors="pt").to(model.device)
-
-    allowed_tokens = tokenizer.convert_tokens_to_ids(possible_outputs)
-    logits_bias = torch.full((len(prompt_batch), model.config.vocab_size), -float('inf')).to(model.device)
-    logits_bias[:, allowed_tokens] = 0
-
-    # print("Shape of input_ids:", inputs.input_ids.shape)
-    # print("Shape of attention_mask:", inputs.attention_mask.shape)
-
-    with torch.no_grad():
-        outputs = model(**inputs)
-        
-        # Print shape of model output logits
-        # print("Shape of model output logits:", outputs.logits.shape)
-        
-        next_token_logits = outputs.logits[:, -1, :] + logits_bias
-        
-        # Print shape of next_token_logits
-        # print("Shape of next_token_logits:", next_token_logits.shape)
-        
-        probs = F.softmax(next_token_logits, dim=-1)
-        
-        # Print shape of probs
-        # print("Shape of probs:", probs.shape)
-        
-        top_k_probs, top_k_indices = torch.topk(probs, k=top_k, dim=-1)
-        
-        # Print shapes of top_k results
-        # print("Shape of top_k_indices:", top_k_indices.shape)
-        # print("Shape of top_k_probs:", top_k_probs.shape)
-
-    top_k_responses = [tokenizer.convert_ids_to_tokens(top_k_indices[i]) for i in range(len(prompt_batch))]
-    return top_k_responses, torch_to_numpy(top_k_probs)
-
+def arr_to_prob_freq(arr):
+    mp = {}
+    for i in arr:
+        if i not in mp:
+            mp[i] = 0
+        mp[i] += 1
+    return sorted([(i, mp[i] / len(arr)) for i in mp.keys()], key=lambda x: -x[1])
+    
 
 # if __name__ == '__main__':
 #     prompts = ["Question 1 test asdf lmao yeet: ...", "Question 2: ...", "Say the letter G"]
@@ -113,30 +81,48 @@ def get_next_token(prompt_batch, top_k=len(possible_outputs)):
 
 #     print([get_entropy_from_probabilities(i) for i in probs])
 
-tot_questions = get_data_len()
+tot_questions = 1000
+# tot_questions = get_data_len()
 # n_samples = 2000
 print(tot_questions)
 
 res = []
 correct_count = 0
+n_shuffles = 50
+temp = {'A' : 0, 'B' : 1, 'C' : 2, 'D' : 3, 'E' : 4, 'F' : 5, 'G' : 6, 'H' : 7}
 
 with tqdm(total=tot_questions) as pbar:
     for row in range(tot_questions):
-        cur_prompt = [get_row_query(row)]
-
-        response, probs = get_next_token(cur_prompt)
-
-        entropy = get_entropy_from_probabilities(probs[0])
-
-        model_ans = response[0][0]
-        model_ans_prob = probs[0][0]
         cor_ans = get_correct_answer(row)
+        tot_sem_entropy = 0
+        all_responses = []
+        all_entropies = []
+        
+        for _ in range(n_shuffles):
+            cur_prompt, shuffled = get_shuffled_row_query(row)
+            cur_prompt = [cur_prompt]
 
-        # Check if the model's answer is correct
-        is_correct = model_ans == cor_ans
-        if is_correct:
-            correct_count += 1
+            response, probs = get_next_token_fast(cur_prompt)
+            
+            # print(response, probs)
+            # print("SDF", sum(probs))
+            
+            entropy = get_entropy_from_probabilities(probs)
+            tot_sem_entropy += entropy
 
+            model_ans = response[0][0]
+            model_ans = shuffled[temp[model_ans]]
+
+            all_responses.append(model_ans)
+            all_entropies.append(entropy)
+
+        print(all_responses)
+        
+        answer_avg_entropy = sum(np.where(all_responses == cor_ans, all_entropies, 0)) / n_shuffles
+        avg_entropy = sum(all_entropies) / n_shuffles
+
+        model_ans = arr_to_prob_freq(all_responses)[0][0]
+        correct_count += 1 if model_ans == cor_ans else 0
         # Update progress bar with the current percentage of correct answers
         pbar.set_postfix({'Correct %': f'{(correct_count / (row + 1)) * 100:.2f}%'})
         pbar.update(1)
@@ -144,10 +130,11 @@ with tqdm(total=tot_questions) as pbar:
         # print(row, is_correct, entropy, model_ans, cor_ans, probs[0])
         res.append({
                 "row": row,
-                "entropy": entropy,
-                "is_correct": is_correct,
-                "model_prob":probs[0],
-                "model_response":response[0]
+                "avg_entropy": avg_entropy,
+                "answer_avg_entropy": answer_avg_entropy,
+                "is_correct": model_ans == cor_ans,
+                "model_prob":arr_to_prob_freq(all_responses),
+                "model_response": model_ans,
             })
 
 dump_data(res, data_outpath)

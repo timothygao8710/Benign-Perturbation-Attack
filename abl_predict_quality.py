@@ -14,29 +14,51 @@ from sklearn.neural_network import MLPClassifier
 from xgboost import XGBClassifier
 from lightgbm import LGBMClassifier
 from utils import *
+import random
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 
 def load(file_path):
     data = load_data(file_path)
 
     features, output = [], []
+    idx = 0
     for row in data:
+        idx += 1
+        if idx > 900:
+            break
+        
+        print(row.keys())
         output.append(row["is_correct"])
         cur_features = []
+        
+        # cur_features.append(random.random())
+        
         # cur_features.append(row["model_prob"][0])
+        # cur_features.append(row["model_prob"][1])
+        # cur_features.append(row["model_prob"][2])
+        # cur_features.append(row["model_prob"][3])
+        # cur_features.append(row["model_prob"][4])
+        
+        
         cur_features.append(row["original_entropy"])
         cur_features.append(row["peturbed_entropy_5"])
         cur_features.append(row["same_sensitivity_5"])
-        # cur_features.append(row["correct_sensitivity_5"])
+        
         cur_features.append(row["peturbed_entropy_10"])
         cur_features.append(row["same_sensitivity_10"])
-        # cur_features.append(row["correct_sensitivity_10"])
+        
         cur_features.append(row["peturbed_entropy_15"])
         cur_features.append(row["same_sensitivity_15"])
-        # cur_features.append(row["correct_sensitivity_15"])
+        
         cur_features.append(row["peturbed_entropy_20"])
         cur_features.append(row["same_sensitivity_20"])
         cur_features.append(row["peturbed_entropy_25"])
         cur_features.append(row["same_sensitivity_25"])
+        
+        
+        # cur_features.append(row["correct_sensitivity_5"])
+        # cur_features.append(row["correct_sensitivity_10"])
+        # cur_features.append(row["correct_sensitivity_15"])
         
         # cur_features.extend(row["model_prob"])
         # diffs = [row["model_prob"][i-1] - row["model_prob"][i] for i in range(1, len(row["model_prob"]))]
@@ -44,6 +66,8 @@ def load(file_path):
         features.append(cur_features)
 
         print(row)
+        
+    print(f"Total rows: {len(features)}")
     return features, output
 
 file_path = '/accounts/projects/binyu/timothygao/Benign-Perturbation-Attack/data/edit_distance_v_accuracy_K_10'
@@ -65,19 +89,19 @@ X_test_scaled = scaler.transform(X_test)
 # Define classifiers
 classifiers = {
     'Logistic Regression': LogisticRegression(random_state=42),
-    'Ridge Classifier': RidgeClassifier(random_state=42),
-    'Decision Tree': DecisionTreeClassifier(random_state=42),
-    'Random Forest': RandomForestClassifier(random_state=42),
-    'Gradient Boosting': GradientBoostingClassifier(random_state=42),
-    'AdaBoost': AdaBoostClassifier(random_state=42),
-    'Extra Trees': ExtraTreesClassifier(random_state=42),
-    'SVM (RBF kernel)': SVC(kernel='rbf', random_state=42),
-    'SVM (Linear kernel)': SVC(kernel='linear', random_state=42),
-    'Gaussian Naive Bayes': GaussianNB(),
-    'K-Nearest Neighbors': KNeighborsClassifier(),
-    'Neural Network': MLPClassifier(random_state=42),
-    'XGBoost': XGBClassifier(random_state=42),
-    'LightGBM': LGBMClassifier(random_state=42)
+    # 'Ridge Classifier': RidgeClassifier(random_state=42),
+    # 'Decision Tree': DecisionTreeClassifier(random_state=42),
+    # 'Random Forest': RandomForestClassifier(random_state=42),
+    # 'Gradient Boosting': GradientBoostingClassifier(random_state=42),
+    # 'AdaBoost': AdaBoostClassifier(random_state=42),
+    # 'Extra Trees': ExtraTreesClassifier(random_state=42),
+    # 'SVM (RBF kernel)': SVC(kernel='rbf', random_state=42),
+    # 'SVM (Linear kernel)': SVC(kernel='linear', random_state=42),
+    # 'Gaussian Naive Bayes': GaussianNB(),
+    # 'K-Nearest Neighbors': KNeighborsClassifier(),
+    # 'Neural Network': MLPClassifier(random_state=42),
+    # 'XGBoost': XGBClassifier(random_state=42),
+    # 'LightGBM': LGBMClassifier(random_state=42)
 }
 
 # Define feature sets for ablation study
@@ -95,15 +119,16 @@ feature_sets = {
 def evaluate_classifier(clf, X_train, X_test, y_train, y_test):
     clf.fit(X_train, y_train)
     y_pred = clf.predict(X_test)
+    y_proba = clf.predict_proba(X_test)[:, 1]  # Assuming binary classification for AUROC
     cv_scores = cross_val_score(clf, X_train, y_train, cv=5)
     return {
         'Accuracy': accuracy_score(y_test, y_pred),
         'Precision': precision_score(y_test, y_pred),
         'Recall': recall_score(y_test, y_pred),
         'F1 Score': f1_score(y_test, y_pred),
+        'AUROC': roc_auc_score(y_test, y_proba),
         'Cross-Validation Score': np.mean(cv_scores)
     }
-
 # Perform ablation study
 results = {}
 for clf_name, clf in classifiers.items():
